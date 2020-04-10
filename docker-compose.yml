@@ -18,6 +18,20 @@ services:
     ports:
     - 8070:80
 
+  auth:
+    image: remedymatch/auth:latest
+    environment:
+      - PROXY_ADDRESS_FORWARDING=true
+      - DB_VENDOR=MYSQL
+      - DB_ADDR=db
+      - DB_DATABASE=keycloak
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - KEYCLOAK_USER=admin
+      - KEYCLOAK_PASSWORD=admin
+    ports:
+      - 8090:8080
+
   backend:
     image: remedymatch/backend:latest
     ports:
