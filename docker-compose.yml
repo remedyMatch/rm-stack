@@ -39,6 +39,7 @@ services:
 
   backend:
     image: remedymatch/backend:latest
+    command: java -Dspring.profiles.active=dbinit -jar /app/spring-boot-application.jar
     ports:
     - 8081:8081
     environment:
@@ -48,7 +49,7 @@ services:
     - SPRING_DATASOURCE_USERNAME=root
     - SPRING_DATASOURCE_PASSWORD=root
     - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
-    - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://auth:8090/auth/realms/rmio
+    - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://auth:8080/auth/realms/rmio
     - IO_REMEDYMATCH_BACKEND_ENGINE_URL=http://engine:8085/engine
     - IO_REMEDYMATCH_BACKEND_GEOCODERSERVICEAPIKEY=2831cf619102d5
     depends_on:
