@@ -27,3 +27,11 @@ Admin Console
 User: `admin`
 
 Passwort: `admin`
+
+## Camunda
+
+`http://localhost:8080/engine/app/welcome/default/`
+
+User: `admin`
+
+Passwort: `admin`
