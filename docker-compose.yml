@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.7'
 
 services:
   reverseproxy:
@@ -20,6 +20,7 @@ services:
 
   pma:
     image: hauptmedia/phpmyadmin:latest
+    restart: on-failure
     environment:
     - PMA_ABSOLUTE_URI=http://localhost:8080/pma/
     - SERVER_1_HOST=db
@@ -28,6 +29,7 @@ services:
 
   auth:
     image: remedymatch/auth:latest
+    restart: on-failure
     environment:
       - PROXY_ADDRESS_FORWARDING=true
       - DB_VENDOR=MYSQL
@@ -38,11 +40,18 @@ services:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
       - KEYCLOAK_IMPORT=/tmp/keycloak-conf/rmio_realm.json
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/realms/rmio"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     depends_on:
       - db
 
   backend:
     image: remedymatch/backend:latest
+    restart: on-failure
     command: java -Dspring.profiles.active=dbinit -jar /app/spring-boot-application.jar
     ports:
     - 8081:8081
@@ -63,6 +72,7 @@ services:
 
   engine:
     image: remedymatch/engine:latest
+    restart: on-failure
     environment:
     - CAMUNDA_BPM_ADMIN_USER_PASSWORD=admin
     - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/engine?serverTimezone=UTC
@@ -73,6 +83,9 @@ services:
     - SERVER_SERVLET_CONTEXT_PATH=/engine
     depends_on:
     - db
+
+  frontend:
+    image: remedymatch/frontend:latest
 
 volumes:
   db-data:

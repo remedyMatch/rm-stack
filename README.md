@@ -35,3 +35,13 @@ Passwort: `admin`
 User: `admin`
 
 Passwort: `admin`
+
+
+## RemedyMatch Frontend
+
+`http://localhost:8080/app/`
+
+User: `demo`
+
+Passwort: `remedy`
+
