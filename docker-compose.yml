@@ -1,0 +1,22 @@
+version: '3.3'
+
+services:
+  db:
+    image: remedymatch/db:latest
+    environment:
+    - MYSQL_ROOT_PASSWORD=root
+    volumes:
+    - db-data:/var/lib/mysql
+    ports:
+    - 3306:3306
+
+  pma:
+    image: hauptmedia/phpmyadmin:latest
+    environment:
+    - PMA_ABSOLUTE_URI=http://localhost:8070/
+    - SERVER_1_HOST=db
+    ports:
+    - 8070:80
+
+volumes:
+  db-data:
