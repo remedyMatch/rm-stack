@@ -1,22 +1,28 @@
 version: '3.3'
 
 services:
+  reverseproxy:
+    build: .
+    ports:
+    - 8080:8080
+    depends_on:
+    - pma
+    - auth
+    - backend
+    - engine
+
   db:
     image: remedymatch/db:latest
     environment:
     - MYSQL_ROOT_PASSWORD=root
     volumes:
     - db-data:/var/lib/mysql
-    ports:
-    - 3306:3306
 
   pma:
     image: hauptmedia/phpmyadmin:latest
     environment:
-    - PMA_ABSOLUTE_URI=http://localhost:8070/
+    - PMA_ABSOLUTE_URI=http://localhost:8080/pma/
     - SERVER_1_HOST=db
-    ports:
-    - 8070:80
     depends_on:
     - db
 
@@ -32,8 +38,6 @@ services:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
       - KEYCLOAK_IMPORT=/tmp/keycloak-conf/rmio_realm.json
-    ports:
-      - 8090:8080
     depends_on:
       - db
 
@@ -59,8 +63,6 @@ services:
 
   engine:
     image: remedymatch/engine:latest
-    ports:
-    - 8085:8085
     environment:
     - CAMUNDA_BPM_ADMIN_USER_PASSWORD=admin
     - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/engine?serverTimezone=UTC
