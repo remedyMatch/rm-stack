@@ -40,19 +40,14 @@ services:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
       - KEYCLOAK_IMPORT=/tmp/keycloak-conf/rmio_realm.json
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/auth/realms/rmio"]
-      interval: 1m30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+
     depends_on:
       - db
 
   backend:
     image: remedymatch/backend:latest
     restart: on-failure
-    command: java -Dspring.profiles.active=dbinit -jar /app/spring-boot-application.jar
+    command: /bin/sh -c "sleep 30 && exec java -Dspring.profiles.active=dbinit -jar /app/spring-boot-application.jar"
     ports:
     - 8081:8081
     environment:
