@@ -31,6 +31,7 @@ services:
       - DB_PASSWORD=root
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
+      - KEYCLOAK_IMPORT=/tmp/keycloak-conf/rmio_realm.json
     ports:
       - 8090:8080
     depends_on:
