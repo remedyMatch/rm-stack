@@ -17,6 +17,8 @@ services:
     - SERVER_1_HOST=db
     ports:
     - 8070:80
+    depends_on:
+    - db
 
   auth:
     image: remedymatch/auth:latest
@@ -31,6 +33,8 @@ services:
       - KEYCLOAK_PASSWORD=admin
     ports:
       - 8090:8080
+    depends_on:
+      - db
 
   backend:
     image: remedymatch/backend:latest
@@ -46,6 +50,10 @@ services:
     - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://auth:8090/auth/realms/rmio
     - IO_REMEDYMATCH_BACKEND_ENGINE_URL=http://engine:8085/engine
     - IO_REMEDYMATCH_BACKEND_GEOCODERSERVICEAPIKEY=2831cf619102d5
+    depends_on:
+    - db
+    - auth
+    - engine
 
   engine:
     image: remedymatch/engine:latest
@@ -59,5 +67,8 @@ services:
     - SPRING_DATASOURCE_USERNAME=root
     - SPRING_DATASOURCE_PASSWORD=root
     - SERVER_SERVLET_CONTEXT_PATH=/engine
+    depends_on:
+    - db
+
 volumes:
   db-data:
