@@ -60,3 +60,12 @@ User: `demo`
 
 Passwort: `remedy`
 
+## Komponenten entwickeln
+
+### React frontend
+
+* Local development server starten mit `yarn run start`
+
+* `nginx.conf` editieren, `/app/` route `http://host.docker.internal:3000/app/` als proxy verwenden
+
+* Stack neu starten
