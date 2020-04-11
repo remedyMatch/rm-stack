@@ -49,7 +49,7 @@ services:
   backend:
     image: remedymatch/backend:latest
     restart: on-failure
-    command: /bin/sh -c "sleep 30 && exec java -Dspring.profiles.active=dbinit -jar /app/spring-boot-application.jar"
+    command: /bin/sh -c "sleep 30 && (redir --lport=8008 --laddr=127.0.0.1 --cport=8008 --caddr=reverseproxy &) && exec java -Dspring.profiles.active=dbinit -jar /app/spring-boot-application.jar"
     environment:
     - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/backend?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     - SPRING_DATASOURCE_DATBASE_PLATFORM=org.hibernate.dialect.MySQL8Dialect
@@ -57,7 +57,7 @@ services:
     - SPRING_DATASOURCE_USERNAME=root
     - SPRING_DATASOURCE_PASSWORD=root
     - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
-    - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://reverseproxy:8008/auth/realms/rmio
+    - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://localhost:8008/auth/realms/rmio
     - IO_REMEDYMATCH_BACKEND_ENGINE_URL=http://engine:8085/engine
     - IO_REMEDYMATCH_BACKEND_GEOCODERSERVICEAPIKEY=2831cf619102d5
     depends_on:
@@ -82,6 +82,11 @@ services:
   frontend:
     image: remedymatch/frontend:latest
     restart: on-failure
+    environment:
+    - KEYCLOAK_REALM=rmio
+    - KEYCLOAK_AUTH_SERVER_URL=http://localhost:8008/auth/
+    - KEYCLOAK_RESOURCE=spring-cloud-gateway-client
+    - KEYCLOAK_SSL_REQUIRED=none
 
 volumes:
   db-data:
