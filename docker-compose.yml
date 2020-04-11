@@ -86,7 +86,7 @@ services:
     - KEYCLOAK_REALM=rmio
     - KEYCLOAK_AUTH_SERVER_URL=http://localhost:8008/auth/
     - KEYCLOAK_RESOURCE=spring-cloud-gateway-client
-    - KEYCLOAK_SSL_REQUIRED=none
+    - KEYCLOAK_SSL_REQUIRED=external
 
 volumes:
   db-data:
