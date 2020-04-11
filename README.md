@@ -15,6 +15,7 @@ durch eine Anwendung auf dem Host System blockiert wird, da die Ports alle auf d
 
 | Port | Beschreibung       |
 |------|--------------------|
+| 3306 | MySQL              |
 | 8008 | Reverse Proxy      |
 
 ## Reverse Proxy Exports
@@ -22,16 +23,6 @@ durch eine Anwendung auf dem Host System blockiert wird, da die Ports alle auf d
 Der Reverse Proxy exportiert alle Services auf einem einzelnen HTTP Host, damit diese reibungslos
 
 miteinander kommunizieren können (Stichwörter CORS / JWT Origin)
-
-### phpMyAdmin
-
-Zum Debuggen der MySQL Datenbank
-
-`http://localhost:8008/pma/`
-
-User: `root`
-
-Passwort: `root`
 
 ### Keycloak
 
