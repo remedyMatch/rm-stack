@@ -1,3 +1,5 @@
+## Kickstart
+
 Stack ausführen:
 
 `docker-compose up --force-recreate --build`
@@ -6,40 +8,53 @@ Stack updaten:
 
 `docker-compose pull`
 
-Folgende Services werden bereitgestellt:
+## Services
 
-## phpMyAdmin
+Folgende Services werden auf localhost bereitgestellt. Hier muss darauf geachtet werden, dass der Port nicht schon
+durch eine Anwendung auf dem Host System blockiert wird, da die Ports alle auf dem Host System gebunden werden müssen.
+
+| Port | Beschreibung       |
+|------|--------------------|
+| 8008 | Reverse Proxy      |
+
+## Reverse Proxy Exports
+
+Der Reverse Proxy exportiert alle Services auf einem einzelnen HTTP Host, damit diese reibungslos
+
+miteinander kommunizieren können (Stichwörter CORS / JWT Origin)
+
+### phpMyAdmin
 
 Zum Debuggen der MySQL Datenbank
 
-`http://localhost:8080/pma/`
+`http://localhost:8008/pma/`
 
 User: `root`
 
 Passwort: `root`
 
-## Keycloak
+### Keycloak
 
 Admin Console
 
-`http://localhost:8080/auth/admin/`
+`http://localhost:8008/auth/admin/`
 
 User: `admin`
 
 Passwort: `admin`
 
-## Camunda
+### Camunda
 
-`http://localhost:8080/engine/app/welcome/default/`
+`http://localhost:8008/engine/app/welcome/default/`
 
 User: `admin`
 
 Passwort: `admin`
 
 
-## RemedyMatch Frontend
+### RemedyMatch Frontend
 
-`http://localhost:8080/app/`
+`http://localhost:8008/app/`
 
 User: `demo`
 

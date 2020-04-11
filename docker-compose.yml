@@ -4,12 +4,13 @@ services:
   reverseproxy:
     build: .
     ports:
-    - 8080:8080
+    - 8008:8008
     depends_on:
-    - pma
-    - auth
-    - backend
-    - engine
+      - pma
+      - auth
+      - backend
+      - engine
+      - frontend
 
   db:
     image: remedymatch/db:latest
@@ -22,7 +23,7 @@ services:
     image: hauptmedia/phpmyadmin:latest
     restart: on-failure
     environment:
-    - PMA_ABSOLUTE_URI=http://localhost:8080/pma/
+    - PMA_ABSOLUTE_URI=http://localhost:8008/pma/
     - SERVER_1_HOST=db
     depends_on:
     - db
@@ -40,7 +41,8 @@ services:
       - KEYCLOAK_USER=admin
       - KEYCLOAK_PASSWORD=admin
       - KEYCLOAK_IMPORT=/tmp/keycloak-conf/rmio_realm.json
-
+    ports:
+    - 8080:8080
     depends_on:
       - db
 
@@ -48,8 +50,6 @@ services:
     image: remedymatch/backend:latest
     restart: on-failure
     command: /bin/sh -c "sleep 30 && exec java -Dspring.profiles.active=dbinit -jar /app/spring-boot-application.jar"
-    ports:
-    - 8081:8081
     environment:
     - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/backend?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
     - SPRING_DATASOURCE_DATBASE_PLATFORM=org.hibernate.dialect.MySQL8Dialect
@@ -57,7 +57,7 @@ services:
     - SPRING_DATASOURCE_USERNAME=root
     - SPRING_DATASOURCE_PASSWORD=root
     - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
-    - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://auth:8080/auth/realms/rmio
+    - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://reverseproxy:8008/auth/realms/rmio
     - IO_REMEDYMATCH_BACKEND_ENGINE_URL=http://engine:8085/engine
     - IO_REMEDYMATCH_BACKEND_GEOCODERSERVICEAPIKEY=2831cf619102d5
     depends_on:
@@ -81,6 +81,7 @@ services:
 
   frontend:
     image: remedymatch/frontend:latest
+    restart: on-failure
 
 volumes:
   db-data:
