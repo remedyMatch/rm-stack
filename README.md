@@ -57,9 +57,15 @@ Passwort: `admin`
 
 `http://localhost:8008/app/`
 
-User: `demo`
+User: `test_bedarf`
 
-Passwort: `remedy`
+Passwort: `G3h31m`
+
+
+User: `test_spender`
+
+Passwort: `G3h31m`
+
 
 ## Komponenten entwickeln
 
