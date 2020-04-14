@@ -69,7 +69,7 @@ services:
   backend:
     image: remedymatch/backend:latest
     restart: on-failure
-    command: java -Dspring.profiles.active=dbinit -jar /app/spring-boot-application.jar
+    command: java -Dspring.profiles.active=prod,dbinit -jar /app/spring-boot-application.jar
     environment:
     - JWT_ISSUER_URI_REDIRECT_HOST=reverseproxy
     - JWT_ISSUER_URI_REDIRECT_PORT=8008
