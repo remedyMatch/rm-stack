@@ -29,6 +29,12 @@ services:
 #    - GOOGLE_RECAPTCHA_PUBLIC=6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
 #    - GOOGLE_ANALYTICS_ID=
 
+#  pma:
+#    image: hauptmedia/phpmyadmin:latest
+#    environment:
+#    - PMA_ABSOLUTE_URI=http://localhost:8008/pma/
+#    - SERVER_1_HOST=db
+
   db:
     image: remedymatch/db:latest
     ports:
