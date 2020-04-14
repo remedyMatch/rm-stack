@@ -8,6 +8,16 @@ Stack updaten:
 
 `docker-compose pull`
 
+Stack vollständig zurücksetzen und aktualisieren:
+
+`docker-compose rm`
+
+`docker volume rm rm-stack_db-data`
+
+`docker-compose pull`
+
+`docker-compose up --force-recreate --build`
+
 ## Services
 
 Folgende Services werden auf localhost bereitgestellt. Hier muss darauf geachtet werden, dass der Port nicht schon
