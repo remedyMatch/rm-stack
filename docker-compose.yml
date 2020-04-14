@@ -11,6 +11,24 @@ services:
       - engine
       - frontend
 
+#  website:
+#    image: remedymatch/website:latest
+#    environment:
+#    - APP_ENV=prod
+#    - APP_SECRET=b1f80d24cc8efd80f7d6de37fb32359a406a8d15
+#    - DATABASE_URL=mysql://root:root@db/website
+#    - MAILER_DSN=
+#    - ASSET_VERSION=1
+#    - KEYCLOAK_URL=http://localhost:8008/auth
+#    - KEYCLOAK_REALM=rmio
+#    - KEYCLOAK_CLIENT_ID=admin-cli
+#    - KEYCLOAK_CLIENT_SECRET=
+#    - KEYCLOAK_USER=rm_website_user
+#    - KEYCLOAK_PASSWORD=rm_website_user_password
+#    - GOOGLE_RECAPTCHA_SECRET=6LeIxAcTAAAAAGG-vFI1TnRWxMZNFuojJ4WifJWe
+#    - GOOGLE_RECAPTCHA_PUBLIC=6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI
+#    - GOOGLE_ANALYTICS_ID=
+
   db:
     image: remedymatch/db:latest
     ports:
