@@ -57,14 +57,14 @@ Passwort: `admin`
 
 `http://localhost:8008/app/`
 
-User: `test_bedarf`
+User: `bedarf`
 
-Passwort: `G3h31m`
+Passwort: `demo`
 
 
-User: `test_spender`
+User: `spender`
 
-Passwort: `G3h31m`
+Passwort: `demo`
 
 
 ## Komponenten entwickeln
