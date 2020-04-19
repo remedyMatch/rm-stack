@@ -74,13 +74,11 @@ services:
     - JWT_ISSUER_URI_REDIRECT_HOST=reverseproxy
     - JWT_ISSUER_URI_REDIRECT_PORT=8008
     - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/backend?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-    - SPRING_DATASOURCE_DATBASE_PLATFORM=org.hibernate.dialect.MySQL8Dialect
-    - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.cj.jdbc.Driver
     - SPRING_DATASOURCE_USERNAME=root
     - SPRING_DATASOURCE_PASSWORD=root
-    - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQL8Dialect
     - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://localhost:8008/auth/realms/rmio
-    - IO_REMEDYMATCH_ENGINE_URL=http://engine:8085/engine
+    - IO_REMEDYMATCH_ENGINE_REMEDYRESTAPIURL=http://engine:8085/engine/remedy
+    - IO_REMEDYMATCH_ENGINE_EXTERNALTASKURL=http://engine:8085/engine/rest
     - IO_REMEDYMATCH_GEODATEN_GEOCODERSERVICEAPIKEY=2831cf619102d5
     - IO_REMEDYMATCH_KEYCLOAK_SERVERURL=http://localhost:8008/auth
     - IO_REMEDYMATCH_KEYCLOAK_USER_REALM=rmio
@@ -94,17 +92,32 @@ services:
     - auth
     - engine
 
+#  notifications:
+#    image: remedymatch/notifications:latest
+#    restart: on-failure
+#    command: java -Dspring.profiles.active=prod -jar /app/spring-boot-application.jar
+#    environment:
+#    - SPRING_MAIL_HOST=BITTE_AUSFUEHLEN
+#    - SPRING_MAIL_PORT=BITTE_AUSFUEHLEN
+#    - SPRING_MAIL_USERNAME=BITTE_AUSFUEHLEN
+#    - SPRING_MAIL_PASSWORD=BITTE_AUSFUEHLEN
+#    - IO_REMEDYMATCH_ENGINE_EXTERNALTASKURL=http://engine:8085/engine/rest
+#    - IO_REMEDYMATCH_FRONTEND_URL=http://www.remedymatch.io/app
+#    - IO_REMEDYMATCH_KEYCLOAK_USER_REALM=rmio
+#    - IO_REMEDYMATCH_WEBSITE_IMPRESSUMURL=http://www.remedymatch.io/impressum
+#    - IO_REMEDYMATCH_WEBSITE_EMAILLOGOURL=http://www.remedymatch.io/assets/images/logo/mail-logo.png
+#    - IO_REMEDYMATCH_EMAIL_FROM=bittenichtantworten@remedymatch.io
+#    depends_on:
+#    - engine
+
   engine:
     image: remedymatch/engine:latest
     restart: on-failure
     environment:
     - CAMUNDA_BPM_ADMIN_USER_PASSWORD=admin
     - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/engine?serverTimezone=UTC
-    - SPRING_DATASOURCE_DATBASE_PLATFORM=org.hibernate.dialect.MySQL5Dialect
-    - SPRING_DATASOURCE_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
     - SPRING_DATASOURCE_USERNAME=root
     - SPRING_DATASOURCE_PASSWORD=root
-    - SERVER_SERVLET_CONTEXT_PATH=/engine
     depends_on:
     - db
 
