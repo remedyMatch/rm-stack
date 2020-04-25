@@ -113,6 +113,7 @@ services:
   engine:
     image: remedymatch/engine:latest
     restart: on-failure
+    command: java -Dspring.profiles.active=prod -jar /app/spring-boot-application.jar
     environment:
     - CAMUNDA_BPM_ADMIN_USER_PASSWORD=admin
     - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/engine?serverTimezone=UTC
