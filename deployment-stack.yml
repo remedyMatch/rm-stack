@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rm-stack-deployment
+  labels:
+    app: rm-stack-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rm-stack-deployment
+  template:
+    metadata:
+      labels:
+        app: rm-stack-deployment
+    spec:
+      containers:
+        - name: db
+          image: remedymatch/db:latest
+          env:
+            - MYSQL_ROOT_PASSWORD=root
+          volumMount:
+            - name: db-data
+              mountPath: db-data:/var/lib/mysql
+          ports:
+            - containerPort: 3306
+            - containerPort: 3306
+        - name: auth
+          image: remedymatch/auth:latest
+          env:
+            - PROXY_ADDRESS_FORWARDING=true
+            - DB_VENDOR=MYSQL
+            - DB_ADDR=db
+            - DB_DATABASE=keycloak
+            - DB_USER=root
+            - DB_PASSWORD=root
+            - KEYCLOAK_USER=admin
+            - KEYCLOAK_PASSWORD=admin
+            - KEYCLOAK_IMPORT=/tmp/keycloak-conf/rmio_realm.json
+        - name: backend
+          image: remedymatch/backend:latest
+          command: java -Dspring.profiles.active=prod,dbinit -jar /app/spring-boot-application.jar
+          env:
+            - JWT_ISSUER_URI_REDIRECT_HOST=reverseproxy
+            - JWT_ISSUER_URI_REDIRECT_PORT=8008
+            - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/backend?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+            - SPRING_DATASOURCE_USERNAME=root
+            - SPRING_DATASOURCE_PASSWORD=root
+            - SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER_URI=http://localhost:8008/auth/realms/rmio
+            - IO_REMEDYMATCH_ENGINE_REMEDYRESTAPIURL=http://engine:8085/engine/remedy
+            - IO_REMEDYMATCH_ENGINE_EXTERNALTASKURL=http://engine:8085/engine/rest
+            - IO_REMEDYMATCH_GEODATEN_GEOCODERSERVICEAPIKEY=2831cf619102d5
+            - IO_REMEDYMATCH_KEYCLOAK_SERVERURL=http://localhost:8008/auth
+            - IO_REMEDYMATCH_KEYCLOAK_USER_REALM=rmio
+            - IO_REMEDYMATCH_KEYCLOAK_CLIENT_REALM=rmio
+            - IO_REMEDYMATCH_KEYCLOAK_CLIENT_USERNAME=rm_backend_user
+            - IO_REMEDYMATCH_KEYCLOAK_CLIENT_PASSWORD=rm_backend_user_password
+            - IO_REMEDYMATCH_KEYCLOAK_CLIENT_CLIENTID=admin-cli
+            - IO_REMEDYMATCH_KEYCLOAK_CLIENT_CLIENTSECRET=admin
+        - name: engine
+          image: remedymatch/engine:latest
+          command: java -Dspring.profiles.active=prod -jar /app/spring-boot-application.jar
+          env:
+            - CAMUNDA_BPM_ADMIN_USER_PASSWORD=admin
+            - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/engine?serverTimezone=UTC
+            - SPRING_DATASOURCE_USERNAME=root
+            - SPRING_DATASOURCE_PASSWORD=root
+        - name: frontend
+          image: remedymatch/frontend:latest
+          env:
+            - KEYCLOAK_REALM=rmio
+            - KEYCLOAK_AUTH_SERVER_URL=http://localhost:8008/auth/
+            - KEYCLOAK_RESOURCE=spring-cloud-gateway-client
+            - KEYCLOAK_SSL_REQUIRED=external
